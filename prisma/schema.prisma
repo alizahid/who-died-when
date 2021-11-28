@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+// enums
+
+enum CharacterStatus {
+  alive
+  dead
+}
+
+// models
+
+model Show {
+  id Int @id @default(autoincrement())
+
+  slug   String @unique
+  tmdbId Int    @unique
+
+  name       String
+  overview   String
+  image      String
+  popularity Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  characters Character[]
+}
+
+model Actor {
+  id Int @id @default(autoincrement())
+
+  tmdbId Int @unique
+
+  name  String
+  image String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  characters Character[]
+}
+
+model Character {
+  id Int @id @default(autoincrement())
+
+  tmdbId String @unique
+
+  show   Show @relation(fields: [showId], references: [id])
+  showId Int
+
+  actor   Actor @relation(fields: [actorId], references: [id])
+  actorId Int
+
+  name   String
+  status CharacterStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deaths Death[]
+}
+
+model Death {
+  id Int @id @default(autoincrement())
+
+  character   Character @relation(fields: [characterId], references: [id])
+  characterId Int
+
+  when        String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

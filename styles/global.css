@@ -1,0 +1,32 @@
+/* fonts */
+
+@import url('https://api.fontshare.com/css?f[]=satoshi@1&display=swap');
+
+/* tailwind */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* global */
+
+::selection {
+  @apply text-black bg-primary-200;
+}
+
+body {
+  @apply text-black cursor-default bg-primary-200 font-body;
+}
+
+a {
+  @apply transition-colors text-primary-600 hover:text-primary-500 active:text-primary-700;
+}
+
+button,
+input {
+  @apply focus:outline-none;
+}
+
+/* layout */
+
+/* components */

@@ -1,0 +1,8 @@
+/.cache
+/app/styles
+/build
+/public/build
+/server/build
+node_modules
+
+.env

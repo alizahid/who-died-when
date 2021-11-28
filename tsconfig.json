@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "moduleResolution": "node",
+    "noEmit": true,
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "es2019"
+  },
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "typings/*.d.ts"]
+}
