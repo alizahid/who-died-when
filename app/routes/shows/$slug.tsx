@@ -66,9 +66,10 @@ const ShowPage: FunctionComponent = () => {
     <Layout className="flex flex-col lg:flex-row">
       <div className="w-full lg:w-auto">
         <Poster
+          alt={show.name}
           className="rounded-lg shadow-sm lg:max-h-96"
-          title={show.name}
-          url={show.image}
+          loading="eager"
+          src={show.image}
         />
       </div>
 

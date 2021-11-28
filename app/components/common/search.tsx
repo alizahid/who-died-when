@@ -70,10 +70,10 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     onClick={() => setFocused(false)}
                     to={`/shows/${show.slug}`}>
                     <Poster
+                      alt={show.name}
                       className="max-h-16"
+                      src={show.image}
                       thumb
-                      title={show.name}
-                      url={show.image}
                     />
                     <div className="ml-2 font-medium">{show.name}</div>
                   </Link>
@@ -95,10 +95,10 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     onClick={() => setFocused(false)}
                     to={`/shows/${character.show.slug}`}>
                     <Photo
+                      alt={character.name}
                       className="max-h-16"
+                      src={character.image}
                       thumb
-                      title={character.name}
-                      url={character.image}
                     />
                     <div className="ml-2 font-medium">{character.name}</div>
                   </Link>

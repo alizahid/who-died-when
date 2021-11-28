@@ -47,8 +47,8 @@ const HomePage: FunctionComponent = () => {
       <h1 className="text-4xl font-bold">Recently updated</h1>
 
       <section className="grid gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3">
-        {characters.map(({ show }) => (
-          <ShowCard key={show.id} show={show} />
+        {characters.map(({ show }, index) => (
+          <ShowCard index={index} key={show.id} show={show} />
         ))}
       </section>
     </Layout>

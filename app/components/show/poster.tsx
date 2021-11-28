@@ -1,23 +1,25 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, ImgHTMLAttributes } from 'react'
 
 import { TMDB_IMAGE_URL } from '~/lib/config'
 
-type Props = {
-  className?: string
+type Props = Pick<
+  ImgHTMLAttributes<HTMLImageElement>,
+  'className' | 'alt' | 'loading' | 'src'
+> & {
   thumb?: boolean
-  title?: string
-  url: string
 }
 
 export const Poster: FunctionComponent<Props> = ({
+  alt,
   className,
-  thumb,
-  title,
-  url
+  loading = 'lazy',
+  src,
+  thumb
 }) => (
   <img
-    alt={title}
+    alt={alt}
     className={className}
-    src={[TMDB_IMAGE_URL, thumb ? 'w185' : 'w780', url].join('')}
+    loading={loading}
+    src={[TMDB_IMAGE_URL, thumb ? 'w185' : 'w780', src].join('')}
   />
 )
