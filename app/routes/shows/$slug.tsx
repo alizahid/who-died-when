@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { FunctionComponent, useState } from 'react'
-import type { LoaderFunction, MetaFunction } from 'remix'
-import { json, useLoaderData } from 'remix'
+import { json, LoaderFunction, MetaFunction, useLoaderData } from 'remix'
 
 import { CharacterCard } from '~/components/character'
 import { Poster } from '~/components/show/poster'
