@@ -12,8 +12,6 @@ type ShowData = {
 }
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const prisma = new PrismaClient()
-
   const slug = params.slug
 
   if (!slug) {
@@ -21,6 +19,8 @@ export const loader: LoaderFunction = async ({ params }) => {
       status: 404
     })
   }
+
+  const prisma = new PrismaClient()
 
   const show = await prisma.show.findUnique({
     include: {
