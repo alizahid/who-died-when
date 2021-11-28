@@ -28,6 +28,6 @@ export const ShowCard: FunctionComponent<Props> = ({
       src={show.image}
     />
 
-    <h3 className="m-3 text-xl font-semibold">{show.name}</h3>
+    <div className="m-3 text-xl font-semibold">{show.name}</div>
   </Link>
 )

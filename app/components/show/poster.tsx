@@ -19,7 +19,9 @@ export const Poster: FunctionComponent<Props> = ({
   <img
     alt={alt}
     className={className}
+    height={1169 / (thumb ? 4 : 1)}
     loading={loading}
     src={[TMDB_IMAGE_URL, thumb ? 'w185' : 'w780', src].join('')}
+    width={780 / (thumb ? 4 : 1)}
   />
 )

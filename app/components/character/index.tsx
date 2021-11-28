@@ -29,8 +29,8 @@ export const CharacterCard: FunctionComponent<Props> = ({
       <Photo alt={character.name} src={character.actor.image} />
 
       <div className="m-3">
-        <h3 className="text-lg font-semibold">{character.name}</h3>
-        <h4 className="font-medium text-gray-600">{character.actor?.name}</h4>
+        <div className="text-lg font-semibold">{character.name}</div>
+        <div className="font-medium text-gray-600">{character.actor?.name}</div>
       </div>
 
       {(visible || open) && (
