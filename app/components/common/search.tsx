@@ -12,6 +12,7 @@ import useOnClickOutside from 'use-onclickoutside'
 import { algolia } from '~/lib/algolia'
 import { Hits } from '~/types/algolia'
 
+import { Photo } from '../character/photo'
 import { Poster } from '../show/poster'
 import { Spinner } from './spinner'
 
@@ -68,7 +69,12 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     key={show.objectID}
                     onClick={() => setFocused(false)}
                     to={`/shows/${show.slug}`}>
-                    <Poster className="max-h-16" thumb url={show.image} />
+                    <Poster
+                      className="max-h-16"
+                      thumb
+                      title={show.name}
+                      url={show.image}
+                    />
                     <div className="ml-2 font-medium">{show.name}</div>
                   </Link>
                 ))
@@ -88,7 +94,12 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     key={character.objectID}
                     onClick={() => setFocused(false)}
                     to={`/shows/${character.show.slug}`}>
-                    <Poster className="max-h-16" thumb url={character.image} />
+                    <Photo
+                      className="max-h-16"
+                      thumb
+                      title={character.name}
+                      url={character.image}
+                    />
                     <div className="ml-2 font-medium">{character.name}</div>
                   </Link>
                 ))

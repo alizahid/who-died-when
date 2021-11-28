@@ -17,7 +17,7 @@ export const ShowCard: FunctionComponent<Props> = ({ className, show }) => (
       className
     )}
     to={`/shows/${show.slug}`}>
-    <Poster url={show.image} />
+    <Poster title={show.name} url={show.image} />
 
     <h3 className="m-3 text-xl font-semibold">{show.name}</h3>
   </Link>

@@ -26,7 +26,7 @@ export const CharacterCard: FunctionComponent<Props> = ({
         className
       )}
       onClick={() => setOpen(!open)}>
-      {character.actor && <Photo url={character.actor.image} />}
+      <Photo title={character.name} url={character.actor.image} />
 
       <div className="m-3">
         <h3 className="text-lg font-semibold">{character.name}</h3>
