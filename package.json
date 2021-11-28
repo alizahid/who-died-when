@@ -11,6 +11,7 @@
     "build": "yarn css:build; remix build",
     "css:build": "postcss styles --base styles --dir app/styles --env production",
     "css:watch": "postcss styles --base styles --dir app/styles -w",
+    "db": "env-cmd -f .env.production prisma",
     "dev": "concurrently 'yarn css:watch' 'env-cmd remix dev'",
     "lint": "eslint . --fix",
     "postinstall": "remix setup node",
