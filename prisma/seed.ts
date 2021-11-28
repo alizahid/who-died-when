@@ -3,139 +3,157 @@
 import { CharacterStatus, PrismaClient } from '@prisma/client'
 import algoliasearch from 'algoliasearch'
 import axios from 'axios'
+import Listr from 'listr'
 import { kebabCase } from 'lodash'
 
-const prisma = new PrismaClient()
-
 const main = async () => {
-  const api = axios.create({
-    baseURL: 'https://api.themoviedb.org/3',
-    params: {
-      api_key: process.env.TMDB_API_KEY
-    }
-  })
-
-  const {
-    data: { results }
-  } = await api.get<{
-    results: Array<{
-      id: number
-      name: string
-      overview: string
-      popularity: number
-      poster_path: string
-    }>
-  }>('/trending/tv/week')
-
-  await Promise.all(
-    results.map(async (data) => {
-      if (!data.poster_path) {
-        return
-      }
-
-      const show = await prisma.show.upsert({
-        create: {
-          image: data.poster_path,
-          name: data.name,
-          overview: data.overview,
-          popularity: data.popularity,
-          slug: kebabCase(data.name),
-          tmdbId: data.id
-        },
-        update: {
-          popularity: data.popularity
-        },
-        where: {
-          tmdbId: data.id
-        }
-      })
-
-      const {
-        data: { cast }
-      } = await api.get<{
-        cast: Array<{
-          character: string
-          credit_id: string
-          id: number
-          name: string
-          profile_path: string
-        }>
-      }>(`/tv/${data.id}/credits`)
-
-      return Promise.all(
-        cast.map(async (data) => {
-          if (!data.profile_path) {
-            return
-          }
-
-          const actor = await prisma.actor.upsert({
-            create: {
-              image: data.profile_path,
-              name: data.name,
-              tmdbId: data.id
-            },
-            update: {},
-            where: {
-              tmdbId: data.id
-            }
-          })
-
-          return prisma.character.upsert({
-            create: {
-              actor: {
-                connect: {
-                  id: actor.id
-                }
-              },
-              name: data.character,
-              show: {
-                connect: {
-                  id: show.id
-                }
-              },
-              status: CharacterStatus.alive,
-              tmdbId: data.credit_id
-            },
-            update: {},
-            where: {
-              tmdbId: data.credit_id
-            }
-          })
-        })
-      )
-    })
-  )
-
-  const shows = await prisma.show.findMany()
+  const prisma = new PrismaClient()
 
   const algolia = algoliasearch(
     process.env.ALGOLIA_APP_ID!,
     process.env.ALGOLIA_ADMIN_KEY!
   )
 
-  const index = algolia.initIndex(process.env.ALGOLIA_INDEX_SHOWS!)
+  const index = algolia.initIndex(process.env.ALGOLIA_INDEX!)
 
-  await index.clearObjects()
+  const tmdb = axios.create({
+    baseURL: 'https://api.themoviedb.org/3',
+    params: {
+      api_key: process.env.TMDB_API_KEY
+    }
+  })
 
-  await index
-    .saveObjects(
-      shows.map((show) => ({
-        image: show.image,
-        name: show.name,
-        objectID: show.tmdbId,
-        popularity: show.popularity,
-        slug: show.slug
-      }))
-    )
-    .wait()
+  const tasks = new Listr([
+    {
+      task: async () => {
+        const {
+          data: { results }
+        } = await tmdb.get<{
+          results: Array<{
+            id: number
+            name: string
+            overview: string
+            popularity: number
+            poster_path: string
+          }>
+        }>('/trending/tv/week')
+
+        const trending = results.filter(({ poster_path }) => poster_path)
+
+        return new Listr(
+          trending.map((data) => ({
+            task: async () => {
+              const show = await prisma.show.upsert({
+                create: {
+                  image: data.poster_path,
+                  name: data.name,
+                  overview: data.overview,
+                  popularity: data.popularity,
+                  slug: kebabCase(data.name),
+                  tmdbId: data.id
+                },
+                update: {
+                  popularity: data.popularity
+                },
+                where: {
+                  tmdbId: data.id
+                }
+              })
+
+              const {
+                data: { cast }
+              } = await tmdb.get<{
+                cast: Array<{
+                  character: string
+                  credit_id: string
+                  id: number
+                  name: string
+                  profile_path: string
+                }>
+              }>(`/tv/${data.id}/credits`)
+
+              const people = cast.filter(({ profile_path }) => profile_path)
+
+              return Promise.all(
+                people.map(async (person) => {
+                  const actor = await prisma.actor.upsert({
+                    create: {
+                      image: person.profile_path,
+                      name: person.name,
+                      tmdbId: person.id
+                    },
+                    update: {},
+                    where: {
+                      tmdbId: person.id
+                    }
+                  })
+
+                  return prisma.character.upsert({
+                    create: {
+                      actor: {
+                        connect: {
+                          id: actor.id
+                        }
+                      },
+                      name: person.character,
+                      show: {
+                        connect: {
+                          id: show.id
+                        }
+                      },
+                      status: CharacterStatus.alive,
+                      tmdbId: person.credit_id
+                    },
+                    update: {},
+                    where: {
+                      tmdbId: person.credit_id
+                    }
+                  })
+                })
+              )
+            },
+            title: data.name
+          })),
+          {
+            concurrent: true
+          }
+        )
+      },
+      title: 'Fetching trending shows'
+    },
+    {
+      task: async () =>
+        new Listr([
+          {
+            task: () => index.clearObjects(),
+            title: 'Clear index'
+          },
+          {
+            task: async () => {
+              const shows = await prisma.show.findMany()
+
+              return index
+                .saveObjects(
+                  shows.map((show) => ({
+                    image: show.image,
+                    name: show.name,
+                    objectID: show.tmdbId,
+                    popularity: show.popularity,
+                    slug: show.slug
+                  }))
+                )
+                .wait()
+            },
+            title: 'Rebuild index'
+          }
+        ]),
+      title: 'Updating Algolia index'
+    }
+  ])
+
+  await tasks.run()
+
+  await prisma.$disconnect()
 }
 
 main()
-  .catch((error) => {
-    console.error(error)
-
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })
