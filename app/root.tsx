@@ -18,7 +18,6 @@ export const links: LinksFunction = () => [
 export const loader: LoaderFunction = () => ({
   env: {
     ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
-    ALGOLIA_INDEX: process.env.ALGOLIA_INDEX,
     ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY
   }
 })

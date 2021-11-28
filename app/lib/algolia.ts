@@ -1,28 +1,48 @@
-import algoliasearch, { SearchIndex } from 'algoliasearch/lite'
+import algoliasearch, { SearchClient } from 'algoliasearch/lite'
 
-import { ShowHit } from '~/types/algolia'
+import { CharacterHit, Hits, ShowHit } from '~/types/algolia'
+
+import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from './config'
 
 class Algolia {
-  index?: SearchIndex
+  client?: SearchClient
 
-  init(): SearchIndex {
-    return algoliasearch(
-      window.env.ALGOLIA_APP_ID,
-      window.env.ALGOLIA_SEARCH_KEY
-    ).initIndex(window.env.ALGOLIA_INDEX)
-  }
-
-  async search(query: string): Promise<Array<ShowHit>> {
-    if (!this.index) {
-      this.index = this.init()
+  init(): SearchClient {
+    if (this.client) {
+      return this.client
     }
 
-    const { hits } = await this.index.search<ShowHit>(query, {
-      cacheable: true,
-      hitsPerPage: 5
-    })
+    this.client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
 
-    return hits
+    return this.client
+  }
+
+  async search(query: string): Promise<Hits> {
+    const client = this.init()
+
+    const { results } = await client.search([
+      {
+        indexName: 'characters',
+        params: {
+          hitsPerPage: 5
+        },
+        query
+      },
+      {
+        indexName: 'shows',
+        params: {
+          hitsPerPage: 5
+        },
+        query
+      }
+    ])
+
+    const [characters, shows] = results
+
+    return {
+      characters: characters.hits as Array<CharacterHit>,
+      shows: shows.hits as Array<ShowHit>
+    }
   }
 }
 

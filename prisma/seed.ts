@@ -14,8 +14,6 @@ const main = async () => {
     process.env.ALGOLIA_ADMIN_KEY!
   )
 
-  const index = algolia.initIndex(process.env.ALGOLIA_INDEX!)
-
   const tmdb = axios.create({
     baseURL: 'https://api.themoviedb.org/3',
     params: {
@@ -95,7 +93,7 @@ const main = async () => {
                           id: actor.id
                         }
                       },
-                      name: person.character,
+                      name: person.character || 'Self',
                       show: {
                         connect: {
                           id: show.id
@@ -104,7 +102,9 @@ const main = async () => {
                       status: CharacterStatus.alive,
                       tmdbId: person.credit_id
                     },
-                    update: {},
+                    update: {
+                      name: person.character || 'Self'
+                    },
                     where: {
                       tmdbId: person.credit_id
                     }
@@ -125,12 +125,20 @@ const main = async () => {
       task: async () =>
         new Listr([
           {
-            task: () => index.clearObjects(),
-            title: 'Clear index'
+            task: async () => {
+              const shows = algolia.initIndex('shows')
+              const characters = algolia.initIndex('characters')
+
+              await shows.clearObjects()
+              await characters.clearObjects()
+            },
+            title: 'Clear indexes'
           },
           {
             task: async () => {
               const shows = await prisma.show.findMany()
+
+              const index = algolia.initIndex('shows')
 
               return index
                 .saveObjects(
@@ -144,10 +152,37 @@ const main = async () => {
                 )
                 .wait()
             },
-            title: 'Rebuild index'
+            title: 'Rebuild shows index'
+          },
+          {
+            task: async () => {
+              const characters = await prisma.character.findMany({
+                include: {
+                  actor: true,
+                  show: true
+                }
+              })
+
+              const index = algolia.initIndex('characters')
+
+              return index
+                .saveObjects(
+                  characters.map((character) => ({
+                    image: character.actor.image,
+                    name: character.name,
+                    objectID: character.actor.tmdbId,
+                    show: {
+                      name: character.show.name,
+                      slug: character.show.slug
+                    }
+                  }))
+                )
+                .wait()
+            },
+            title: 'Rebuild characters index'
           }
         ]),
-      title: 'Updating Algolia index'
+      title: 'Updating Algolia'
     }
   ])
 
