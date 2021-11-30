@@ -36,10 +36,6 @@ export const Footer: FunctionComponent = () => {
     {
       links: [
         {
-          href: '/about',
-          label: 'About'
-        },
-        {
           href: 'https://github.com/alizahid/who-died-when',
           label: 'GitHub'
         },
