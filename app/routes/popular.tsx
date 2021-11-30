@@ -41,8 +41,8 @@ const PopularPage: FunctionComponent = () => {
       <h1 className="text-4xl font-bold">Popular shows</h1>
 
       <section className="grid gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3">
-        {shows.map((show, index) => (
-          <ShowCard index={index} key={show.id} show={show} />
+        {shows.map((show) => (
+          <ShowCard key={show.id} show={show} />
         ))}
       </section>
     </Layout>

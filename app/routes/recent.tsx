@@ -49,8 +49,8 @@ const RecentPage: FunctionComponent = () => {
       <h1 className="text-4xl font-bold">Recent deaths</h1>
 
       <section className="grid gap-8 mt-8 md:grid-cols-2 lg:grid-cols-3">
-        {deaths.map(({ character: { show } }, index) => (
-          <ShowCard index={index} key={show.id} show={show} />
+        {deaths.map(({ character: { show } }) => (
+          <ShowCard key={show.id} show={show} />
         ))}
       </section>
     </Layout>

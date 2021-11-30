@@ -1,10 +1,11 @@
 const colors = require('tailwindcss/colors')
+const typography = require('@tailwindcss/typography')
 
 module.exports = {
   darkMode: false,
   mode: 'jit',
-  plugins: [],
-  purge: ['app/**/*.tsx'],
+  plugins: [typography],
+  purge: ['app/**/*.{tsx,mdx}'],
   theme: {
     colors,
     extend: {

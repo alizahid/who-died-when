@@ -32,6 +32,23 @@ export const Footer: FunctionComponent = () => {
         }
       ],
       title: 'Edit'
+    },
+    {
+      links: [
+        {
+          href: '/about',
+          label: 'About'
+        },
+        {
+          href: 'https://github.com/alizahid/who-died-when',
+          label: 'GitHub'
+        },
+        {
+          href: 'https://twitter.com/whodiedwhen',
+          label: 'Twitter'
+        }
+      ],
+      title: 'About'
     }
   ]
 
@@ -42,14 +59,20 @@ export const Footer: FunctionComponent = () => {
       <div className="flex mt-4 lg:mt-0">
         {links.map(({ links, title }) => (
           <nav className="ml-8 first:ml-0" key={title}>
-            <h4 className="font-medium">{title}</h4>
+            <div className="font-medium">{title}</div>
 
             <div className="flex flex-col">
-              {links.map(({ href, label }) => (
-                <Link className="mt-1 text-gray-600" key={href} to={href}>
-                  {label}
-                </Link>
-              ))}
+              {links.map(({ href, label }) =>
+                href.startsWith('http') ? (
+                  <a className="mt-1 text-gray-600" href={href} key={href}>
+                    {label}
+                  </a>
+                ) : (
+                  <Link className="mt-1 text-gray-600" key={href} to={href}>
+                    {label}
+                  </Link>
+                )
+              )}
             </div>
           </nav>
         ))}

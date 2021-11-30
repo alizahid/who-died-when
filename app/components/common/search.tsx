@@ -61,7 +61,9 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
         <div className="absolute right-0 z-10 flex flex-col w-full overflow-hidden bg-white rounded-b-lg max-h-96 ring-2 ring-primary-400 top-full">
           {hits ? (
             <div className="overflow-auto">
-              <h3 className="m-3 text-lg font-semibold leading-none">Shows</h3>
+              <div className="m-3 text-lg font-semibold leading-none">
+                Shows
+              </div>
               {hits.shows.length > 0 ? (
                 hits.shows.map((show) => (
                   <Link
@@ -72,7 +74,6 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     <Poster
                       alt={show.name}
                       className="max-w-[4rem]"
-                      loading="eager"
                       src={show.image}
                       thumb
                     />
@@ -85,9 +86,9 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                 </div>
               )}
 
-              <h3 className="m-3 text-lg font-semibold leading-none">
+              <div className="m-3 text-lg font-semibold leading-none">
                 Characters
-              </h3>
+              </div>
               {hits.characters.length > 0 ? (
                 hits.characters.map((character) => (
                   <Link
@@ -98,7 +99,6 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     <Photo
                       alt={character.name}
                       className="max-w-[4rem]"
-                      loading="eager"
                       src={character.image}
                       thumb
                     />

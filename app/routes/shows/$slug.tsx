@@ -66,7 +66,6 @@ const ShowPage: FunctionComponent = () => {
       <Poster
         alt={show.name}
         className="rounded-lg shadow-sm lg:max-w-xs"
-        loading="eager"
         src={show.image}
       />
 
@@ -75,7 +74,7 @@ const ShowPage: FunctionComponent = () => {
         <p className="mt-4 text-gray-600">{show.overview}</p>
 
         <div className="flex items-center justify-between mt-8">
-          <h2 className="text-2xl font-semibold">Cast</h2>
+          <h2 className="text-2xl font-semibold">Characters</h2>
 
           <button
             className="p-2 text-sm font-medium leading-none text-white rounded-lg bg-primary-600"

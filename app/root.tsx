@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react'
-import { LinksFunction, LoaderFunction, useLoaderData } from 'remix'
+import { LinksFunction } from 'remix'
 import { Outlet } from 'remix'
 
 import stylesheet from '~/styles/global.css'
@@ -15,21 +15,10 @@ export const links: LinksFunction = () => [
   }
 ]
 
-export const loader: LoaderFunction = () => ({
-  env: {
-    ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
-    ALGOLIA_SEARCH_KEY: process.env.ALGOLIA_SEARCH_KEY
-  }
-})
-
-const App: FunctionComponent = () => {
-  const data = useLoaderData()
-
-  return (
-    <Document data={data}>
-      <Outlet />
-    </Document>
-  )
-}
+const App: FunctionComponent = () => (
+  <Document>
+    <Outlet />
+  </Document>
+)
 
 export default App

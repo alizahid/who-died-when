@@ -1,10 +1,11 @@
 import { FunctionComponent, ImgHTMLAttributes } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-import { TMDB_IMAGE_URL } from '~/lib/config'
+import { Image } from '../common/image'
 
 type Props = Pick<
   ImgHTMLAttributes<HTMLImageElement>,
-  'className' | 'alt' | 'loading' | 'src'
+  'className' | 'alt' | 'src'
 > & {
   thumb?: boolean
 }
@@ -12,14 +13,14 @@ type Props = Pick<
 export const Photo: FunctionComponent<Props> = ({
   alt,
   className,
-  loading = 'lazy',
   src,
   thumb
 }) => (
-  <img
+  <Image
     alt={alt}
-    className={className}
-    loading={loading}
-    src={[TMDB_IMAGE_URL, thumb ? 'w185' : 'h632', src].join('')}
+    className={twMerge('bg-primary-200', className)}
+    height={632 / (thumb ? 4 : 1)}
+    src={'h632' + src}
+    width={421 / (thumb ? 4 : 1)}
   />
 )

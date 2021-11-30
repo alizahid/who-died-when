@@ -2,15 +2,10 @@ import { FunctionComponent } from 'react'
 import { Links, LiveReload, Meta, Scripts, ScrollRestoration } from 'remix'
 
 type Props = {
-  data?: Record<string, string>
   title?: string
 }
 
-export const Document: FunctionComponent<Props> = ({
-  children,
-  data,
-  title
-}) => (
+export const Document: FunctionComponent<Props> = ({ children, title }) => (
   <html lang="en">
     <head>
       <meta charSet="utf-8" />
@@ -22,14 +17,8 @@ export const Document: FunctionComponent<Props> = ({
 
     <body>
       {children}
+
       <ScrollRestoration />
-      {data && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(data.env)}`
-          }}
-        />
-      )}
       <Scripts />
 
       {process.env.NODE_ENV === 'development' && <LiveReload />}
