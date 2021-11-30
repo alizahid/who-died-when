@@ -71,7 +71,8 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     to={`/shows/${show.slug}`}>
                     <Poster
                       alt={show.name}
-                      className="max-h-16"
+                      className="max-w-[4rem]"
+                      loading="eager"
                       src={show.image}
                       thumb
                     />
@@ -96,7 +97,8 @@ export const Search: FunctionComponent<Props> = ({ className }) => {
                     to={`/shows/${character.show.slug}`}>
                     <Photo
                       alt={character.name}
-                      className="max-h-16"
+                      className="max-w-[4rem]"
+                      loading="eager"
                       src={character.image}
                       thumb
                     />

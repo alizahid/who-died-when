@@ -10,9 +10,6 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.indigo
-      },
-      minHeight: {
-        main: 'calc(100vh - 4rem)'
       }
     },
     fontFamily: {
