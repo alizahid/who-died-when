@@ -23,7 +23,8 @@ export const loader: LoaderFunction = async () => {
     },
     orderBy: {
       createdAt: 'desc'
-    }
+    },
+    take: 30
   })
 
   await prisma.$disconnect()

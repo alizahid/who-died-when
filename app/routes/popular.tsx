@@ -15,7 +15,8 @@ export const loader: LoaderFunction = async () => {
   const shows = await prisma.show.findMany({
     orderBy: {
       popularity: 'desc'
-    }
+    },
+    take: 30
   })
 
   await prisma.$disconnect()
