@@ -62,15 +62,13 @@ const ShowPage: FunctionComponent = () => {
   const [visible, setVisible] = useState(false)
 
   return (
-    <Layout className="flex flex-col lg:flex-row">
-      <div className="w-full lg:w-auto">
-        <Poster
-          alt={show.name}
-          className="rounded-lg shadow-sm lg:max-h-96"
-          loading="eager"
-          src={show.image}
-        />
-      </div>
+    <Layout className="flex flex-col items-start lg:flex-row">
+      <Poster
+        alt={show.name}
+        className="rounded-lg shadow-sm lg:max-w-xs"
+        loading="eager"
+        src={show.image}
+      />
 
       <div className="flex-1 mt-4 lg:mt-0 lg:ml-8">
         <h1 className="text-4xl font-bold">{show.name}</h1>
